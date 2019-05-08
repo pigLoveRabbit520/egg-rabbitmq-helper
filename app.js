@@ -3,10 +3,10 @@ const RabbitMQ = require('./lib/rabbitmq')
 const assert = require('assert')
 
 module.exports = app => {
-    app.addSingleton('rabbitmq', createRabbitMQConnection);
+    app.addSingleton('rabbitmq', createRabbitMQConnection)
 }
 
-async function createRabbitMQConnection(config, app) {
+function createRabbitMQConnection(config, app) {
     assert(config.hostname && config.port && config.username && config.password)
 
     app.coreLogger.info('[egg-rabbitmqHelper] connecting %s"//%s:***@%s:%s',
@@ -24,7 +24,6 @@ async function createRabbitMQConnection(config, app) {
         vhost: config.vhost ? config.vhost : '/',
     }
     const client = new RabbitMQ(config)
-
 
     app.beforeStart(async function () {
         await client.connect()
