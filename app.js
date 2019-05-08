@@ -1,4 +1,6 @@
 const amqp = require('amqplib')
+const RabbitMQ = require('./lib/rabbitmq')
+const assert = require('assert')
 
 module.exports = app => {
     app.addSingleton('rabbitmq', createRabbitMQConnection);
@@ -10,7 +12,7 @@ async function createRabbitMQConnection(config, app) {
     app.coreLogger.info('[egg-rabbitmqHelper] connecting %s"//%s:***@%s:%s',
         config.protocol, config.username, config.hostname, config.port)
 
-    const conn = await amqp.connect({
+    const config = {
         protocol: config.protocol === 'amqp' ? 'amqp' : 'amqps', // 只有两种情况
         hostname: config.hostname,
         port: config.port,
@@ -20,7 +22,14 @@ async function createRabbitMQConnection(config, app) {
         frameMax: config.frameMax > 0 ? config.heartbeat : 0,
         heartbeat: config.heartbeat > 0 ? config.heartbeat : 0, // 心跳
         vhost: config.vhost ? config.vhost : '/',
+    }
+    const client = new RabbitMQ(config)
+
+
+    app.beforeStart(async function () {
+        await client.connect()
+        app.coreLogger.info('[egg-rabbitmqHelper] RabbitMQ is connected')
     })
 
-    return conn
+    return client
 }

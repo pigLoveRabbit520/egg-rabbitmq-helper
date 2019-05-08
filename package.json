@@ -1,6 +1,6 @@
 {
   "name": "egg-rabbitmq-helper",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "",
   "eggPlugin": {
     "name": "rabbitmqHelper"
@@ -11,7 +11,8 @@
     "egg-plugin"
   ],
   "dependencies": {
-    "amqplib": "^0.5.3"
+    "amqplib": "^0.5.3",
+    "bluebird": "^3.5.3"
   },
   "devDependencies": {
     "autod": "^3.0.1",
